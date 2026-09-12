@@ -23,6 +23,18 @@ export function rootContainer(container: React.ReactNode) {
           closable: false,
         },
       }}
+      drawer={{
+        mask: {
+          blur: true,
+        },
+      }}
+      image={{
+        preview: {
+          mask: {
+            blur: true,
+          },
+        },
+      }}
     >
       {container}
     </ConfigProvider>
