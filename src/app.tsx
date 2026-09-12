@@ -1,15 +1,16 @@
 import React from 'react';
 import { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { history, RunTimeLayoutConfig } from '@umijs/max';
+import type { AxiosResponse, RequestConfig, RequestOptions } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { RequestOptionsInit } from 'umi-request';
 import Navigation from '@/components/Basic/Navigation';
 import UserDropdown from '@/components/Basic/UserDropdown';
 import Footer from '@/components/Basic/Footer';
 import { doBasicAccount, doBasicModules, doBasicPermissions } from '@/services/basic';
 import Constants from '@/utils/Constants';
 import { buildPermissionMap, resolveModuleFromPathname } from '@/utils/bootstrap';
+import { getTokenHeaders, storeTokenPair } from '@/utils/token';
 import 'dayjs/locale/zh-cn';
 import { ConfigProvider } from 'antd';
 
@@ -139,33 +140,23 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   };
 };
 
-const AuthHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
-  const Authorization = localStorage.getItem(Constants.Authorization);
+const AuthHeaderInterceptor = (options: RequestOptions) => {
+  const headers = { ...options.headers };
 
-  let headers = {};
-
-  if (Authorization && Authorization !== '') {
-    headers = { Authorization: Authorization };
-  }
+  delete headers[Constants.RefreshToken];
+  delete headers[Constants.RefreshToken.toLowerCase()];
+  Object.assign(headers, getTokenHeaders());
 
   return {
-    url: `${url}`,
-    options: { ...options, interceptors: true, headers },
+    ...options,
+    headers,
   };
 };
 
-const RefreshResponse = (response: any) => {
-  let token = '';
+const RefreshResponse = (response: AxiosResponse) => {
+  const tokenPair = response.headers[Constants.TokenPair.toLowerCase()];
 
-  try {
-    token = response.headers.get(Constants.Authorization);
-  } catch (e) {
-    token = response.headers[Constants.Authorization.toLowerCase()];
-  }
-
-  if (token && token !== localStorage.getItem(Constants.Authorization)) {
-    localStorage.setItem(Constants.Authorization, token);
-  }
+  if (typeof tokenPair === 'string') storeTokenPair(tokenPair);
 
   return response;
 };
@@ -175,7 +166,7 @@ const RefreshResponse = (response: any) => {
  * 它基于 axios 和 ahooks 的 useRequest 提供了一套统一的网络请求和错误处理方案。
  * @doc https://umijs.org/docs/max/request#配置
  */
-export const request = {
+export const request: RequestConfig = {
   ...errorConfig,
   requestInterceptors: [AuthHeaderInterceptor],
   responseInterceptors: [RefreshResponse],

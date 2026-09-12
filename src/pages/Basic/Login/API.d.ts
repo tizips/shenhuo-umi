@@ -6,8 +6,13 @@ declare namespace APIBasicLogin {
   }
 
   type Response = {
-    expire_at?:number;
-    token?:string;
+    session_id: string;
+    access_token: string;
+    refresh_token: string;
+    issued_at: number;
+    access_lifetime: number;
+    refresh_lifetime: number;
+    grace_lifetime?: number;
   }
 
   type Former = {

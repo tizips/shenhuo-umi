@@ -6,6 +6,7 @@ import Profile from './Profile';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { doBasicLogout } from '@/services/basic';
 import Constants from '@/utils/Constants';
+import { clearTokenPair } from '@/utils/token';
 import { stringify } from 'querystring';
 
 import styles from './index.less';
@@ -50,7 +51,7 @@ export default function UserDropdown() {
           permissions: undefined,
         }));
 
-        localStorage.removeItem(Constants.Authorization);
+        clearTokenPair();
 
         if (history.location.pathname !== Constants.Login) {
           history.replace({

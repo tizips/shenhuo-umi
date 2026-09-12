@@ -4,6 +4,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { useModel, history } from '@umijs/max';
 import Constants from '@/utils/Constants';
 import Pattern from '@/utils/Pattern';
+import { clearTokenPair, storeTokenPair } from '@/utils/token';
 import leftLogin from '@/static/images/left-login.png';
 import { doBasicModules, doBasicPermissions } from '@/services/basic';
 import { doLogin } from './service';
@@ -47,24 +48,31 @@ const Login = () => {
     setInitialState((s) => ({ ...s, account, module, modules, permissions }));
   };
 
-  const toLogin = (data: APIBasicLogin.Request) => {
-    localStorage.removeItem(Constants.Authorization);
+  const toLogin = async (data: APIBasicLogin.Request) => {
+    clearTokenPair();
 
+    setResult({});
     setLoading(true);
 
-    doLogin(data)
-      .then(async (response) => {
-        if (response.code !== Constants.Success) {
-          setResult({ result: 'error', message: response.message });
-        } else {
-          setResult({ result: 'success', message: '登陆成功，等待跳转' });
+    try {
+      const response = await doLogin(data);
 
-          localStorage.setItem(Constants.Authorization, response.data.token as string);
+      if (response.code !== Constants.Success) {
+        setResult({ result: 'error', message: response.message });
+        return;
+      }
 
-          await toAccount();
-        }
-      })
-      .finally(() => setLoading(false));
+      if (!storeTokenPair(response.data)) {
+        setResult({ result: 'error', message: '登录响应中的令牌信息无效' });
+        return;
+      }
+
+      setResult({ result: 'success', message: '登录成功，等待跳转' });
+
+      await toAccount();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSubmit = (values: APIBasicLogin.Former) => {

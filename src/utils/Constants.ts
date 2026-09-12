@@ -2,6 +2,8 @@ export default {
   Success: 20000,
   // Prefix: 'admin',
   Authorization: 'Authorization',
+  RefreshToken: 'Refresh-Token',
+  TokenPair: 'Token-Pair',
   Upload: '/api-admin/basic/upload/file',
   Login: '/login',
   Forbidden: '/403',
