@@ -12,7 +12,7 @@
 export default {
   dev: {
     '/api-admin/': {
-      target: 'http://127.0.0.1:9600',
+      target: 'http://127.0.0.1:9610',
       changeOrigin: true,
       pathRewrite: {'^/api-admin': ''},
     },
