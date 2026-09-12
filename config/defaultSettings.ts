@@ -15,7 +15,7 @@ const Settings: LayoutSettings & {
   contentWidth: 'Fluid',
   fixedHeader: false,
   fixSiderbar: true,
-  siderWidth: 140,
+  siderWidth: 240,
   colorWeak: false,
   title: 'SaaS',
   pwa: false,
