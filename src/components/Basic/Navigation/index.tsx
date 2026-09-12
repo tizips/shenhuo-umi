@@ -5,6 +5,7 @@ import { doBasicPermissions } from '@/services/basic';
 import Constants from '@/utils/Constants';
 import routes from '../../../../config/routes';
 import { resolveModuleLandingRoute } from '@/utils/route';
+import styles from './index.less';
 
 const Header = () => {
   const location = useLocation();
@@ -62,6 +63,7 @@ const Header = () => {
 
   return initialState?.modules ? (
     <Menu
+      className={styles.menu}
       mode="horizontal"
       selectedKeys={[`${initialState?.module}`]}
       onClick={onClick}
