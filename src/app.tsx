@@ -39,8 +39,21 @@ export async function getInitialState(): Promise<{
   permissions?: Record<string, string>;
   toAccount?: () => Promise<APIBasic.doBasicAccount | undefined>;
   settings?: Partial<LayoutSettings>;
-  theme?: 'realDark' | 'light';
 }> {
+  const settings = { ...defaultSettings };
+
+  let theme: 'realDark' | 'light' = 'light';
+
+  const cacheTheme = localStorage.getItem('theme');
+
+  if (cacheTheme === 'light' || cacheTheme === 'realDark') {
+    theme = cacheTheme;
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    theme = 'realDark';
+  }
+
+  settings.navTheme = theme;
+
   const toAccount = async () => {
     try {
       const response = await doBasicAccount();
@@ -79,18 +92,18 @@ export async function getInitialState(): Promise<{
             modules: modules.data,
             account,
             permissions: buildPermissionMap(permissions.data || []),
-            settings: defaultSettings,
+            settings,
           };
         }
       }
     }
 
-    return { toAccount, account, settings: defaultSettings };
+    return { toAccount, account, settings };
   }
 
   return {
     toAccount,
-    settings: defaultSettings,
+    settings,
   };
 }
 

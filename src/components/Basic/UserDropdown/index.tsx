@@ -11,25 +11,30 @@ import { stringify } from 'querystring';
 import styles from './index.less';
 import { DesktopIcon, MoonIcon, SunIcon } from '../Icon';
 
-const cacheTheme = localStorage.getItem('theme');
-
 export default function UserDropdown() {
   const { initialState, setInitialState } = useModel('@@initialState');
   const [open, setOpen] = useState<COMBasicUserDropdown.Open>({});
-  const [mode, setMode] = useState(cacheTheme);
+  const [mode, setMode] = useState(initialState?.settings?.navTheme || 'system');
 
   const onTheme = (item: MenuInfo) => {
+    setMode(item.key);
+
+    let theme: 'realDark' | 'light' = 'light';
+
     if (item.key === 'realDark' || item.key === 'light') {
-      // @ts-ignore
-      setInitialState((s) => ({ ...s, theme: item.key }));
+      theme = item.key;
       localStorage.setItem('theme', item.key);
     } else {
       let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setInitialState((s) => ({ ...s, theme: isDarkMode ? 'realDark' : 'light' }));
+      theme = isDarkMode ? 'realDark' : 'light';
       localStorage.removeItem('theme');
     }
 
-    setMode(item.key);
+    let settings = { ...initialState?.settings };
+
+    settings.navTheme = theme;
+
+    setInitialState((s) => ({ ...s, settings }));
   };
 
   const toLogout = async () => {
@@ -134,7 +139,7 @@ export default function UserDropdown() {
         }}
         placement="bottom"
       >
-        <span className={styles.item}>{Theme(initialState?.theme)}</span>
+        <span className={styles.item}>{Theme(initialState?.settings?.navTheme)}</span>
       </Dropdown>
       {initialState?.account ? (
         <Dropdown
