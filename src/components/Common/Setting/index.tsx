@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {useAccess} from "umi";
-import {Button, Card, Form, Input, Modal, notification, Select, Spin, Upload} from 'antd';
-import {PlusOutlined} from '@ant-design/icons';
-import {doInformation, doSave} from './service';
+import React, { useEffect, useState } from 'react';
+import { useAccess } from 'umi';
+import { Button, Card, Form, Input, Modal, notification, Select, Spin, Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import { doInformation, doSave } from './service';
+import { createUploadRequest } from '@/services/helper';
 import Constants from '@/utils/Constants';
 
 const Setting = (props: APICommonSetting.Props) => {
-
   const access = useAccess();
 
   const [former] = Form.useForm();
@@ -19,15 +19,18 @@ const Setting = (props: APICommonSetting.Props) => {
   const onUpload = (e: any) => {
     if (Array.isArray(e)) return e;
 
-    if (e.file.status == 'done') {
+    if (e.file.status === 'done') {
+      const { uid, response }: { uid: string; response: APIResponse.Response<APIBasic.Upload> } =
+        e.file;
 
-      const {uid, response}: { uid: string; response: APIResponse.Response<APIBasic.Upload> } = e.file;
-
-      if (response.code !== Constants.Success) {
-        notification.error({message: response.message});
+      if (response?.code !== Constants.Success) {
+        notification.error({ message: response?.message });
       } else {
         e.fileList?.forEach((item: any) => {
-          if (item.uid == uid) item.thumbUrl = response.data.url;
+          if (item.uid === uid) {
+            item.thumbUrl = response.data.url;
+            item.url = response.data.url;
+          }
         });
       }
     }
@@ -36,7 +39,6 @@ const Setting = (props: APICommonSetting.Props) => {
   };
 
   const toInformation = () => {
-
     setLoad(true);
 
     doInformation(props.module)
@@ -49,8 +51,8 @@ const Setting = (props: APICommonSetting.Props) => {
           const children: any = {};
 
           response.data?.forEach((item) => {
-            if (item.type == 'picture' && item.key) {
-              children[item.key] = item.val ? [{key: item.key, thumbUrl: item.val}] : [];
+            if (item.type === 'picture' && item.key) {
+              children[item.key] = item.val ? [{ key: item.key, thumbUrl: item.val }] : [];
               temp[item.key] = item.val;
             } else if (item.key) {
               children[item.key] = item.val;
@@ -65,15 +67,14 @@ const Setting = (props: APICommonSetting.Props) => {
   };
 
   const onSave = (params: any) => {
-
     setLoad(true);
 
     doSave(props.module, params)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({message: response.message});
+          notification.error({ message: response.message });
         } else {
-          notification.success({message: '修改成功'});
+          notification.success({ message: '修改成功' });
           setChange(false);
           toInformation();
         }
@@ -82,7 +83,6 @@ const Setting = (props: APICommonSetting.Props) => {
   };
 
   const onSubmit = (values: Record<string, any>) => {
-
     const params: any = {};
 
     for (const key in values) {
@@ -98,10 +98,8 @@ const Setting = (props: APICommonSetting.Props) => {
 
   const onChange = (value: any) => {
     for (const key in value) {
-
       if (Array.isArray(value[key])) {
-
-        const temp: Record<string, any> = {...pictures};
+        const temp: Record<string, any> = { ...pictures };
 
         if (value[key].length > 0) {
           temp[key] = value[key][0]?.thumbUrl;
@@ -117,9 +115,9 @@ const Setting = (props: APICommonSetting.Props) => {
   };
 
   const onPreview = (file: any, label?: string) => {
-    const {thumbUrl} = file;
+    const { thumbUrl } = file;
 
-    setPreview({visible: true, title: label, picture: thumbUrl});
+    setPreview({ visible: true, title: label, picture: thumbUrl });
   };
 
   useEffect(() => {
@@ -133,21 +131,21 @@ const Setting = (props: APICommonSetting.Props) => {
       label={record.label}
       valuePropName="fileList"
       getValueFromEvent={onUpload}
-      rules={[{required: record.is_required === 1}]}
+      rules={[{ required: record.is_required === 1 }]}
     >
       <Upload
         name="file"
         listType="picture-card"
         maxCount={1}
         action={Constants.Upload}
-        headers={{Authorization: localStorage.getItem(Constants.Authorization) as string}}
-        data={{dir: `/${props.module}/setting`}}
+        customRequest={createUploadRequest(`/${props.module}/setting`)}
+        data={{ dir: `/${props.module}/setting` }}
         onPreview={(file) => onPreview(file, record.label)}
       >
         {record.key && !pictures[record.key] && (
           <div>
-            <PlusOutlined/>
-            <div style={{marginTop: 8}}>上传</div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>上传</div>
           </div>
         )}
       </Upload>
@@ -159,9 +157,9 @@ const Setting = (props: APICommonSetting.Props) => {
       name={record.key}
       key={record.id}
       label={record.label}
-      rules={[{required: record.is_required === 1}]}
+      rules={[{ required: record.is_required === 1 }]}
     >
-      <Input/>
+      <Input />
     </Form.Item>
   );
 
@@ -170,9 +168,9 @@ const Setting = (props: APICommonSetting.Props) => {
       name={record.key}
       key={record.id}
       label={record.label}
-      rules={[{required: record.is_required === 1, type: 'email'}]}
+      rules={[{ required: record.is_required === 1, type: 'email' }]}
     >
-      <Input/>
+      <Input />
     </Form.Item>
   );
 
@@ -181,9 +179,9 @@ const Setting = (props: APICommonSetting.Props) => {
       name={record.key}
       key={record.id}
       label={record.label}
-      rules={[{required: record.is_required === 1, type: 'url'}]}
+      rules={[{ required: record.is_required === 1, type: 'url' }]}
     >
-      <Input/>
+      <Input />
     </Form.Item>
   );
 
@@ -192,12 +190,12 @@ const Setting = (props: APICommonSetting.Props) => {
       name={record.key}
       key={record.id}
       label={record.label}
-      rules={[{required: record.is_required === 1}]}
+      rules={[{ required: record.is_required === 1 }]}
     >
       <Select
         options={[
-          {label: '是', value: 1},
-          {label: '否', value: 2},
+          { label: '是', value: 1 },
+          { label: '否', value: 2 },
         ]}
       />
     </Form.Item>
@@ -208,14 +206,14 @@ const Setting = (props: APICommonSetting.Props) => {
       name={record.key}
       key={record.id}
       label={record.label}
-      rules={[{required: record.is_required === 1}]}
+      rules={[{ required: record.is_required === 1 }]}
     >
-      <Input.TextArea rows={3}/>
+      <Input.TextArea rows={3} />
     </Form.Item>
   );
 
   const Render = (record: APICommonSetting.Data) => {
-    let r = <React.Fragment key={record.key}/>;
+    let r = <React.Fragment key={record.key} />;
 
     switch (record.type) {
       case 'picture':
@@ -247,8 +245,8 @@ const Setting = (props: APICommonSetting.Props) => {
         <Spin spinning={load}>
           <Form
             form={former}
-            labelCol={{xs: {span: 24}, sm: {span: 3}, md: {span: 3}, lg: {span: 5}}}
-            wrapperCol={{span: 24, lg: {span: 14}}}
+            labelCol={{ xs: { span: 24 }, sm: { span: 3 }, md: { span: 3 }, lg: { span: 5 } }}
+            wrapperCol={{ span: 24, lg: { span: 14 } }}
             disabled={!access.page(`${props.module}.setting.update`)}
             onFinish={onSubmit}
             onValuesChange={onChange}
@@ -256,7 +254,13 @@ const Setting = (props: APICommonSetting.Props) => {
             {data?.map((item) => Render(item))}
             {change && (
               <Form.Item
-                wrapperCol={{xs: {offset: 0, span: 24}, sm: {offset: 3}, md: {offset: 3}, lg: {offset: 5, span: 14}}}>
+                wrapperCol={{
+                  xs: { offset: 0, span: 24 },
+                  sm: { offset: 3 },
+                  md: { offset: 3 },
+                  lg: { offset: 5, span: 14 },
+                }}
+              >
                 <Button type="primary" htmlType="submit" loading={load} block>
                   修改
                 </Button>
@@ -270,9 +274,9 @@ const Setting = (props: APICommonSetting.Props) => {
         title={preview.title}
         centered
         footer={null}
-        onCancel={() => setPreview({visible: false})}
+        onCancel={() => setPreview({ visible: false })}
       >
-        <img alt={preview.title} style={{width: '100%'}} src={preview.picture}/>
+        <img alt={preview.title} style={{ width: '100%' }} src={preview.picture} />
       </Modal>
     </>
   );
