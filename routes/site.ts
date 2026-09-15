@@ -1,6 +1,127 @@
+/**
+ * 菜单排序规则：核心参赛业务 → 内容资讯 → 系统管理
+ * Umi 左侧菜单顺序跟随此处的路由定义顺序
+ */
 export default [
+  // ==================== 核心业务：参赛相关 ====================
   {
-    name: '用户',
+    name: '参赛人员',
+    icon: 'IdcardOutlined',
+    path: '/site/persons',
+    access: 'route',
+    permission: 'site.person.paginate',
+    component: '@/pages/Site/Person/Paginate',
+  },
+  {
+    name: '抽签类别',
+    icon: 'GiftOutlined',
+    path: '/site/draw-categories',
+    access: 'route',
+    permission: 'site.draw_category.paginate',
+    component: '@/pages/Site/DrawCategory/Paginate',
+  },
+  {
+    name: '抽签管理',
+    icon: 'TrophyOutlined',
+    path: '/site/draws',
+    access: 'route',
+    permission: 'site.draw.paginate',
+    component: '@/pages/Site/Draw/Paginate',
+  },
+  {
+    name: '成绩管理',
+    icon: 'BarChartOutlined',
+    path: '/site/scores',
+    access: 'route',
+    permission: 'site.score.paginate',
+    component: '@/pages/Site/Score/Paginate',
+  },
+  {
+    name: '日程分类',
+    icon: 'TagsOutlined',
+    path: '/site/schedule-categories',
+    access: 'route',
+    permission: 'site.schedule_category.paginate',
+    component: '@/pages/Site/ScheduleCategory/Paginate',
+  },
+  {
+    name: '日程管理',
+    icon: 'CalendarOutlined',
+    path: '/site/schedules',
+    access: 'route',
+    permission: 'site.schedule.paginate',
+    component: '@/pages/Site/Schedule/Paginate',
+  },
+  {
+    name: '场景管理',
+    icon: 'VideoCameraOutlined',
+    path: '/site/scenes',
+    access: 'route',
+    permission: 'site.scene.paginate',
+    component: '@/pages/Site/Scene/Paginate',
+  },
+
+  // ==================== 内容资讯 ====================
+  {
+    name: '资讯管理',
+    icon: 'FileTextOutlined',
+    path: '/site/articles',
+    access: 'route',
+    permission: 'site.article.paginate',
+    component: '@/pages/Site/Article/Paginate',
+  },
+  {
+    name: '轮播管理',
+    icon: 'PicRightOutlined',
+    path: '/site/banners',
+    access: 'route',
+    permission: 'site.banner.paginate',
+    component: '@/pages/Site/Banner/Paginate',
+  },
+  {
+    name: '媒体管理',
+    icon: 'PictureOutlined',
+    path: '/site/medias',
+    access: 'route',
+    permission: 'site.media.paginate',
+    component: '@/pages/Site/Media/Paginate',
+  },
+  {
+    name: '导航管理',
+    icon: 'CompassOutlined',
+    path: '/site/navs',
+    access: 'route',
+    permission: 'site.nav.paginate',
+    component: '@/pages/Site/Nav/Paginate',
+  },
+  {
+    name: '页面管理',
+    icon: 'FileOutlined',
+    path: '/site/pages',
+    access: 'route',
+    permission: 'site.page.paginate',
+    component: '@/pages/Site/Page/Paginate',
+  },
+  {
+    name: '内置页面',
+    icon: 'FileDoneOutlined',
+    path: '/site/page-builtins',
+    access: 'route',
+    permission: 'site.page_builtin.paginate',
+    component: '@/pages/Site/PageBuiltin/Paginate',
+  },
+
+  // ==================== 系统管理 ====================
+  {
+    name: '管理人员',
+    icon: 'MobileOutlined',
+    path: '/site/managers',
+    access: 'route',
+    permission: 'site.manager.paginate',
+    component: '@/pages/Site/Manager/Paginate',
+  },
+  {
+    name: '用户管理',
     icon: 'TeamOutlined',
     path: '/site/users',
     access: 'route',
@@ -8,12 +129,12 @@ export default [
     component: '@/pages/Site/User/Paginate',
   },
   {
-    name: '角色',
+    name: '角色管理',
     icon: 'BranchesOutlined',
     path: '/site/roles',
     access: 'route',
     permission: 'site.role.paginate',
     component: '@/pages/Site/Role/Paginate',
   },
-  {component: '@/pages/Errors/404'},
-]
+  { component: '@/pages/Errors/404' },
+];
