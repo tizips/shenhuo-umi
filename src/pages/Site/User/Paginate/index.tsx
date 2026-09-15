@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useAccess, Access, useModel} from 'umi';
-import {Button, Card, notification, Popconfirm, Space, Switch, Table, Tag, Tooltip} from 'antd';
-import {FormOutlined, RedoOutlined} from '@ant-design/icons';
+import {Button, Card, notification, Popconfirm, Space, Switch, Table, Tag} from 'antd';
 import Editor from '@/pages/Site/User/Editor';
 import Enable from '@/components/Basic/Enable';
 import {doDelete, doEnable, doPaginate} from './service';
@@ -132,13 +131,11 @@ const Paginate: React.FC = () => {
         title="账号列表"
         extra={
           <Space size={[10, 10]}>
-            <Tooltip title="刷新">
-              <Button type="primary" icon={<RedoOutlined/>} onClick={toPaginate} loading={load}/>
-            </Tooltip>
+            <Button type="primary" onClick={toPaginate} loading={load}>
+              刷新
+            </Button>
             <Access accessible={access.page('site.user.create')}>
-              <Tooltip title="创建">
-                <Button type="primary" icon={<FormOutlined/>} onClick={onCreate}/>
-              </Tooltip>
+              <Button onClick={onCreate}>创建</Button>
             </Access>
           </Space>
         }

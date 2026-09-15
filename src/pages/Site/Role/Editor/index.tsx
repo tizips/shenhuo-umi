@@ -3,7 +3,6 @@ import { Button, Divider, Form, Input, Modal, notification, Space, Spin, TreeSel
 import { doSitePermissions, doSiteRoleOfInformation } from '@/services/site';
 import { doCreate, doUpdate } from './service';
 import Constants from '@/utils/Constants';
-import { RedoOutlined } from '@ant-design/icons';
 
 const Editor = (props: APISiteRole.Props) => {
   const [former] = Form.useForm<APISiteRole.Former>();
@@ -149,12 +148,9 @@ const Editor = (props: APISiteRole.Props) => {
                   showCheckedStrategy={TreeSelect.SHOW_PARENT}
                 />
               </Form.Item>
-              <Button
-                type="primary"
-                onClick={() => toPermissions()}
-                loading={loading.permission}
-                icon={<RedoOutlined />}
-              />
+              <Button type="primary" onClick={() => toPermissions()} loading={loading.permission}>
+                刷新
+              </Button>
             </Space.Compact>
           </Form.Item>
           <Form.Item label="简介" name="summary" rules={[{ max: 255 }]}>

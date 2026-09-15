@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useModel } from 'umi';
 import { Button, Divider, Form, Input, Modal, notification, Select, Space, Tag } from 'antd';
-import { RedoOutlined } from '@ant-design/icons';
 import { doSiteRoleByOpening } from '@/services/site';
 import { doCreate, doUpdate } from './service';
 import Constants from '@/utils/Constants';
@@ -176,12 +175,9 @@ const Editor: React.FC<APISiteAdmin.Props> = (props) => {
                 }))}
               />
             </Form.Item>
-            <Button
-              type="primary"
-              onClick={() => toRoles()}
-              loading={loading.roles}
-              icon={<RedoOutlined />}
-            />
+            <Button type="primary" onClick={() => toRoles()} loading={loading.roles}>
+              刷新
+            </Button>
           </Space.Compact>
         </Form.Item>
         <Form.Item label="启用" name="is_enable" rules={[{ required: true }]}>

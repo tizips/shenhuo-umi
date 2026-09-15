@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useAccess, Access} from "umi";
-import {Button, Card, notification, Popconfirm, Space, Table, Tooltip} from 'antd';
-import {FormOutlined, RedoOutlined} from '@ant-design/icons';
+import {Button, Card, notification, Popconfirm, Space, Table} from 'antd';
 import Editor from '@/pages/Site/Role/Editor';
 import {doDelete, doPaginate} from './service';
 import Constants from '@/utils/Constants';
@@ -95,13 +94,11 @@ const Paginate: React.FC = () => {
         title="角色列表"
         extra={
           <Space size={[10, 10]}>
-            <Tooltip title="刷新">
-              <Button type="primary" icon={<RedoOutlined/>} onClick={toPaginate} loading={load}/>
-            </Tooltip>
+            <Button type="primary" onClick={toPaginate} loading={load}>
+              刷新
+            </Button>
             <Access accessible={access.page("site.role.create")}>
-              <Tooltip title="创建">
-                <Button type="primary" icon={<FormOutlined/>} onClick={onCreate}/>
-              </Tooltip>
+              <Button onClick={onCreate}>创建</Button>
             </Access>
           </Space>
         }
