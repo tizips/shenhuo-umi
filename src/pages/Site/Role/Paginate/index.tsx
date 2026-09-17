@@ -129,7 +129,7 @@ const Paginate: React.FC = () => {
           <Table.Column
             title="操作"
             align="center"
-            width={100}
+            width={160}
             render={(record: APISiteRoles.Data) => (
               <>
                 <Access accessible={access.page("site.role.update")}>
