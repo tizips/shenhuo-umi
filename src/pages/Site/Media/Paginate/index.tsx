@@ -127,6 +127,12 @@ const Paginate: React.FC = () => {
         >
           <Table.Column title="场景" dataIndex="scene" />
           <Table.Column
+            title="标题"
+            dataIndex="title"
+            ellipsis
+            render={(title: string) => title || '-'}
+          />
+          <Table.Column
             title="类型"
             align="center"
             render={(record: APISiteMedias.Data) => (

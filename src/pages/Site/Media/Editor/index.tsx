@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Modal, notification, Select, Upload } from 'antd';
+import { Form, Input, Modal, notification, Select, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { doSiteSceneOfOpening } from '@/services/site';
 import { doCreate, doUpdate } from './service';
@@ -48,6 +48,7 @@ const Editor: React.FC<APISiteMedia.Props> = (props) => {
 
   const submit = (values: APISiteMedia.Former, isUpdate: boolean) => {
     const params = {
+      title: values.type === 'video' ? values.title?.trim() : undefined,
       scene_id: values.scene_id,
       type: values.type,
       url: values.files?.[0]?.thumbUrl || values.files?.[0]?.url,
@@ -69,7 +70,9 @@ const Editor: React.FC<APISiteMedia.Props> = (props) => {
 
   useEffect(() => {
     if (props.visible) {
+      former.resetFields();
       former.setFieldsValue({
+        title: props.params?.title,
         scene_id: props.params?.scene_id,
         type: props.params?.type,
         is_top: props.params?.is_top ?? 2,
@@ -115,9 +118,26 @@ const Editor: React.FC<APISiteMedia.Props> = (props) => {
               { label: '图片', value: 'image' },
               { label: '视频', value: 'video' },
             ]}
-            onChange={() => former.setFieldValue('files', [])}
+            onChange={(val) => {
+              former.setFieldValue('files', []);
+              if (val !== 'video') {
+                former.setFieldValue('title', undefined);
+              }
+            }}
           />
         </Form.Item>
+        {type === 'video' && (
+          <Form.Item
+            label="标题"
+            name="title"
+            rules={[
+              { required: true, message: '请输入视频标题' },
+              { max: 128, message: '标题最多 128 个字符' },
+            ]}
+          >
+            <Input placeholder="请输入视频标题" maxLength={128} />
+          </Form.Item>
+        )}
         <Form.Item
           label="文件"
           name="files"

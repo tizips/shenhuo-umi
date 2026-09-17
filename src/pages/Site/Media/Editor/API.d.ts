@@ -9,6 +9,7 @@ declare namespace APISiteMedia {
   };
 
   type Former = {
+    title?: string;
     scene_id?: number;
     type?: string;
     files?: any[];
