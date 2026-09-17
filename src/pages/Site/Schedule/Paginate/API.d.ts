@@ -24,5 +24,6 @@ declare namespace APISiteSchedules {
 
   type Search = {
     page?: number;
+    category_id?: number;
   };
 }

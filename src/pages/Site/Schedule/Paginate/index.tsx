@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Access, useAccess } from 'umi';
 import { Button, Card, notification, Popconfirm, Space, Table } from 'antd';
 import Editor from '@/pages/Site/Schedule/Editor';
+import { doSiteScheduleCategoryOfOpening } from '@/services/site';
 import { doDelete, doPaginate } from './service';
 import Constants from '@/utils/Constants';
 import Loop from '@/utils/Loop';
@@ -14,6 +15,7 @@ const Paginate: React.FC = () => {
   const [load, setLoad] = useState(false);
   const [visible, setVisible] = useState<APISiteSchedules.Visible>({});
   const [data, setData] = useState<APIData.Paginate<APISiteSchedules.Data>>();
+  const [categories, setCategories] = useState<APISite.Opening[]>([]);
 
   const toPaginate = () => {
     setLoad(true);
@@ -55,14 +57,33 @@ const Paginate: React.FC = () => {
   };
 
   useEffect(() => {
+    doSiteScheduleCategoryOfOpening().then((response) => {
+      if (response.code === Constants.Success) {
+        setCategories(response.data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     toPaginate();
   }, [search]);
 
   return (
     <>
       <Card
-        title="日程列表"
-        extra={
+        tabList={[
+          { key: 'all', tab: '全部' },
+          ...categories.map((item) => ({ key: String(item.id), tab: item.name || '-' })),
+        ]}
+        activeTabKey={search.category_id ? String(search.category_id) : 'all'}
+        onTabChange={(key) =>
+          setSearch((prev) => ({
+            ...prev,
+            page: 1,
+            category_id: key === 'all' ? undefined : Number(key),
+          }))
+        }
+        tabBarExtraContent={
           <Space size={[10, 10]}>
             <Button type="primary" onClick={toPaginate} loading={load}>
               刷新
