@@ -6,7 +6,6 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import Navigation from '@/components/Basic/Navigation';
 import UserDropdown from '@/components/Basic/UserDropdown';
-import Footer from '@/components/Basic/Footer';
 import { doBasicAccount, doBasicModules, doBasicPermissions } from '@/services/basic';
 import Constants from '@/utils/Constants';
 import { buildPermissionMap, resolveModuleFromPathname } from '@/utils/bootstrap';
@@ -126,7 +125,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     logo: false,
     headerContentRender: () => initialState?.account && <Navigation />,
     actionsRender: () => [<UserDropdown key="user-dropdown" />],
-    footerRender: () => <Footer />,
+    // footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
