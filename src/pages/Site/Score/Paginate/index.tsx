@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Access, useAccess } from 'umi';
-import { Button, Card, Input, notification, Popconfirm, Space, Table } from 'antd';
+import { Button, Card, Divider, Input, notification, Popconfirm, Space, Table } from 'antd';
 import Editor from '@/pages/Site/Score/Editor';
 import Import from '@/pages/Site/Score/Import';
+import Notify from './Notify';
 import { doDelete, doPaginate } from './service';
 import Constants from '@/utils/Constants';
 import Loop from '@/utils/Loop';
@@ -76,6 +77,11 @@ const Paginate: React.FC = () => {
             <Access accessible={access.page('site.score.import')}>
               <Button onClick={() => setVisible({ import: true })}>导入</Button>
             </Access>
+            <Access accessible={access.page('site.score.notify')}>
+              <Button type="primary" onClick={() => setVisible({ notify: true })}>
+                推送
+              </Button>
+            </Access>
             <Access accessible={access.page('site.score.create')}>
               <Button
                 onClick={() => {
@@ -89,6 +95,7 @@ const Paginate: React.FC = () => {
           </Space>
         }
       >
+        <Divider style={{ marginTop: 0, marginBottom: 16 }} />
         <Table
           rowKey="id"
           dataSource={data?.data}
@@ -161,6 +168,11 @@ const Paginate: React.FC = () => {
           toPaginate();
         }}
         onCancel={() => setVisible({ import: false })}
+      />
+      <Notify
+        visible={visible.notify}
+        onCancel={() => setVisible({ notify: false })}
+        onSave={() => setVisible({ notify: false })}
       />
       <Editor
         visible={visible.editor}
