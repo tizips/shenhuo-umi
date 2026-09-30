@@ -13,6 +13,14 @@ export default [
     component: '@/pages/Site/Person/Paginate',
   },
   {
+    name: '签到管理',
+    icon: 'CheckCircleOutlined',
+    path: '/site/checkins',
+    access: 'route',
+    permission: 'site.checkin.paginate',
+    component: '@/pages/Site/Checkin/Paginate',
+  },
+  {
     name: '抽签类别',
     icon: 'GiftOutlined',
     path: '/site/draw-categories',

@@ -90,6 +90,12 @@ declare namespace APISite {
     created_at?: string;
   };
 
+  type CheckinInformation = {
+    id?: number;
+    name?: string;
+    created_at?: string;
+  };
+
   type MediaInformation = {
     id?: number;
     title?: string;
