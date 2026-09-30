@@ -21,6 +21,14 @@ export default [
     component: '@/pages/Site/Checkin/Paginate',
   },
   {
+    name: '仲裁申诉',
+    icon: 'AuditOutlined',
+    path: '/site/appeals',
+    access: 'route',
+    permission: 'site.appeal.paginate',
+    component: '@/pages/Site/Appeal/Paginate',
+  },
+  {
     name: '抽签类别',
     icon: 'GiftOutlined',
     path: '/site/draw-categories',

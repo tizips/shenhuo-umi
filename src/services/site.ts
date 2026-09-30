@@ -63,3 +63,7 @@ export async function doSiteMediaOfInformation(id?: number) {
 export async function doSiteCheckinOfInformation(id?: number) {
   return request<APIResponse.Response<APISite.CheckinInformation>>(`/api-admin/site/checkins/${id}`);
 }
+
+export async function doSiteAppealOfInformation(id?: number) {
+  return request<APIResponse.Response<APISite.AppealInformation>>(`/api-admin/site/appeals/${id}`);
+}
