@@ -4,11 +4,14 @@ declare namespace APISiteMedias {
     title?: string;
     scene_id?: number;
     scene?: string;
-    type?: string;
+    type?: 'image' | 'video';
     url?: string;
+    cover?: string;
     is_top?: number;
+    is_enable?: number;
     created_at?: string;
     loading_deleted?: boolean;
+    loading_enable?: boolean;
   };
 
   type Visible = {

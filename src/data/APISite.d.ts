@@ -89,4 +89,17 @@ declare namespace APISite {
     group_name?: string;
     created_at?: string;
   };
+
+  type MediaInformation = {
+    id?: number;
+    title?: string;
+    scene_id?: number;
+    scene?: string;
+    type?: 'image' | 'video';
+    url?: string;
+    cover?: string;
+    is_top?: number;
+    is_enable?: number;
+    created_at?: string;
+  };
 }

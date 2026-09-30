@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Access, useAccess } from 'umi';
-import { Button, Card, Image, notification, Popconfirm, Select, Space, Table, Tag } from 'antd';
+import { Button, Card, Image, notification, Popconfirm, Select, Space, Switch, Table, Tag } from 'antd';
 import Editor from '@/pages/Site/Media/Editor';
+import Enable from '@/components/Basic/Enable';
 import { doSiteSceneOfOpening } from '@/services/site';
-import { doDelete, doPaginate } from './service';
+import { doDelete, doEnable, doPaginate } from './service';
 import Constants from '@/utils/Constants';
 import Loop from '@/utils/Loop';
 import dayjs from 'dayjs';
@@ -18,6 +19,7 @@ const Paginate: React.FC = () => {
   const access = useAccess();
   const [search, setSearch] = useState<APISiteMedias.Search>({});
   const [editor, setEditor] = useState<APISiteMedias.Data | undefined>();
+  const [editorType, setEditorType] = useState<'image' | 'video'>('image');
   const [load, setLoad] = useState(false);
   const [visible, setVisible] = useState<APISiteMedias.Visible>({});
   const [data, setData] = useState<APIData.Paginate<APISiteMedias.Data>>();
@@ -62,6 +64,44 @@ const Paginate: React.FC = () => {
       });
   };
 
+  const onEnable = (record: APISiteMedias.Data) => {
+    if (data?.data) {
+      const temp = { ...data };
+      if (temp.data) {
+        Loop.ById(temp.data, record.id, (item) => (item.loading_enable = true));
+      }
+      setData(temp);
+    }
+    const enable: APIRequest.Enable<number> = {
+      id: record.id,
+      is_enable: record.is_enable === 1 ? 2 : 1,
+    };
+    doEnable(enable)
+      .then((response) => {
+        if (response.code !== Constants.Success) {
+          notification.error({ message: response.message });
+        } else {
+          notification.success({ message: `${enable.is_enable === 1 ? '启用' : '禁用'}成功！` });
+          if (data?.data) {
+            const temp = { ...data };
+            if (temp.data) {
+              Loop.ById(temp.data, record.id, (item) => (item.is_enable = enable.is_enable));
+            }
+            setData(temp);
+          }
+        }
+      })
+      .finally(() => {
+        if (data?.data) {
+          const temp = { ...data };
+          if (temp.data) {
+            Loop.ById(temp.data, record.id, (item) => (item.loading_enable = false));
+          }
+          setData(temp);
+        }
+      });
+  };
+
   useEffect(() => {
     doSiteSceneOfOpening().then((response) => {
       if (response.code === Constants.Success) {
@@ -100,14 +140,51 @@ const Paginate: React.FC = () => {
               刷新
             </Button>
             <Access accessible={access.page('site.media.create')}>
-              <Button
-                onClick={() => {
-                  setEditor(undefined);
-                  setVisible({ editor: true });
-                }}
-              >
-                创建
-              </Button>
+              {search.type === 'video' ? (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setEditor(undefined);
+                    setEditorType('video');
+                    setVisible({ editor: true });
+                  }}
+                >
+                  添加视频
+                </Button>
+              ) : search.type === 'image' ? (
+                <Button
+                  type="primary"
+                  onClick={() => {
+                    setEditor(undefined);
+                    setEditorType('image');
+                    setVisible({ editor: true });
+                  }}
+                >
+                  添加图片
+                </Button>
+              ) : (
+                <Space>
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setEditor(undefined);
+                      setEditorType('image');
+                      setVisible({ editor: true });
+                    }}
+                  >
+                    添加图片
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setEditor(undefined);
+                      setEditorType('video');
+                      setVisible({ editor: true });
+                    }}
+                  >
+                    添加视频
+                  </Button>
+                </Space>
+              )}
             </Access>
           </Space>
         }
@@ -152,17 +229,29 @@ const Paginate: React.FC = () => {
           <Table.Column
             title="预览"
             align="center"
-            width={120}
+            width={140}
             render={(record: APISiteMedias.Data) => {
-              if (!record.url) return '-';
               if (record.type === 'video') {
                 return (
-                  <a href={record.url} target="_blank" rel="noreferrer">
-                    查看视频
-                  </a>
+                  <Space size={8} align="center">
+                    {record.cover && (
+                      <Image
+                        src={record.cover}
+                        height={40}
+                        style={{ objectFit: 'cover', borderRadius: 4 }}
+                      />
+                    )}
+                    {record.url ? (
+                      <a href={record.url} target="_blank" rel="noreferrer">
+                        查看视频
+                      </a>
+                    ) : (
+                      '-'
+                    )}
+                  </Space>
                 );
               }
-              return <Image src={record.url} height={40} />;
+              return record.url ? <Image src={record.url} height={40} /> : '-';
             }}
           />
           <Table.Column
@@ -172,6 +261,24 @@ const Paginate: React.FC = () => {
             render={(record: APISiteMedias.Data) =>
               record.created_at && dayjs(record.created_at).format('YY/MM/DD')
             }
+          />
+          <Table.Column
+            title="启用"
+            align="center"
+            width={80}
+            render={(record: APISiteMedias.Data) => (
+              <Access
+                accessible={access.page('site.media.enable')}
+                fallback={<Enable is_enable={record.is_enable} />}
+              >
+                <Switch
+                  size="small"
+                  checked={record.is_enable === 1}
+                  onClick={() => onEnable(record)}
+                  loading={record.loading_enable}
+                />
+              </Access>
+            )}
           />
           <Table.Column
             title="操作"
@@ -184,6 +291,7 @@ const Paginate: React.FC = () => {
                     type="link"
                     onClick={() => {
                       setEditor(record);
+                      setEditorType((record.type as 'image' | 'video') || 'image');
                       setVisible({ editor: true });
                     }}
                   >
@@ -209,6 +317,7 @@ const Paginate: React.FC = () => {
       <Editor
         visible={visible.editor}
         params={editor}
+        defaultType={editorType}
         onSave={() => {
           setVisible({ editor: false });
           toPaginate();

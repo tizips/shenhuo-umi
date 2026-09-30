@@ -55,3 +55,7 @@ export async function doSitePersonOfInformation(id?: string) {
 export async function doSiteScoreOfInformation(id?: number) {
   return request<APIResponse.Response<APISite.ScoreInformation>>(`/api-admin/site/scores/${id}`);
 }
+
+export async function doSiteMediaOfInformation(id?: number) {
+  return request<APIResponse.Response<APISite.MediaInformation>>(`/api-admin/site/medias/${id}`);
+}

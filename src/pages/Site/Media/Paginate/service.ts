@@ -7,3 +7,10 @@ export async function doPaginate(params?: APISiteMedias.Search) {
 export async function doDelete(id?: number) {
   return request<APIResponse.Response<any>>(`/api-admin/site/medias/${id}`, { method: 'DELETE' });
 }
+
+export async function doEnable(data: APIRequest.Enable<number>) {
+  return request<APIResponse.Response<any>>('/api-admin/site/media/enable', {
+    method: 'PUT',
+    data,
+  });
+}
