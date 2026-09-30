@@ -63,6 +63,7 @@ const Editor: React.FC<APISiteArticle.Props> = (props) => {
         : values.published_at,
       is_top: values.is_top,
       is_recommend: values.is_recommend,
+      is_enable: values.is_enable,
     };
 
     setLoading({ ...loading, confirmed: true });
@@ -87,6 +88,7 @@ const Editor: React.FC<APISiteArticle.Props> = (props) => {
         published_at: undefined,
         is_top: 2,
         is_recommend: 2,
+        is_enable: 1,
         content: undefined,
       });
       return;
@@ -108,6 +110,7 @@ const Editor: React.FC<APISiteArticle.Props> = (props) => {
               : undefined,
             is_top: response.data.is_top,
             is_recommend: response.data.is_recommend,
+            is_enable: response.data.is_enable,
             content: response.data.content,
           });
         }
@@ -169,6 +172,9 @@ const Editor: React.FC<APISiteArticle.Props> = (props) => {
             <Select options={yesNo} />
           </Form.Item>
           <Form.Item label="首页推荐" name="is_recommend" rules={[{ required: true }]}>
+            <Select options={yesNo} />
+          </Form.Item>
+          <Form.Item label="启用" name="is_enable" rules={[{ required: true }]}>
             <Select options={yesNo} />
           </Form.Item>
           <Form.Item label="内容" name="content" rules={requiredHtml}>

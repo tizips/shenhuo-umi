@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Access, useAccess } from 'umi';
-import { Button, Card, Image, Input, notification, Popconfirm, Space, Table, Tag,  } from 'antd';
+import { Button, Card, Image, Input, notification, Popconfirm, Space, Switch, Table, Tag } from 'antd';
 import Editor from '@/pages/Site/Article/Editor';
-import { doDelete, doPaginate } from './service';
+import Enable from '@/components/Basic/Enable';
+import { doDelete, doEnable, doPaginate } from './service';
 import Constants from '@/utils/Constants';
 import Loop from '@/utils/Loop';
 import dayjs from 'dayjs';
@@ -48,6 +49,44 @@ const Paginate: React.FC = () => {
           const temp = { ...data };
           if (temp.data) {
             Loop.ById(temp.data, record.id, (item) => (item.loading_deleted = false));
+          }
+          setData(temp);
+        }
+      });
+  };
+
+  const onEnable = (record: APISiteArticles.Data) => {
+    if (data?.data) {
+      const temp = { ...data };
+      if (temp.data) {
+        Loop.ById(temp.data, record.id, (item) => (item.loading_enable = true));
+      }
+      setData(temp);
+    }
+    const enable: APIRequest.Enable<number> = {
+      id: record.id,
+      is_enable: record.is_enable === 1 ? 2 : 1,
+    };
+    doEnable(enable)
+      .then((response) => {
+        if (response.code !== Constants.Success) {
+          notification.error({ message: response.message });
+        } else {
+          notification.success({ message: `${enable.is_enable === 1 ? '启用' : '禁用'}成功！` });
+          if (data?.data) {
+            const temp = { ...data };
+            if (temp.data) {
+              Loop.ById(temp.data, record.id, (item) => (item.is_enable = enable.is_enable));
+            }
+            setData(temp);
+          }
+        }
+      })
+      .finally(() => {
+        if (data?.data) {
+          const temp = { ...data };
+          if (temp.data) {
+            Loop.ById(temp.data, record.id, (item) => (item.loading_enable = false));
           }
           setData(temp);
         }
@@ -132,6 +171,24 @@ const Paginate: React.FC = () => {
             render={(record: APISiteArticles.Data) =>
               record.published_at && dayjs(record.published_at).format('YY/MM/DD HH:mm')
             }
+          />
+          <Table.Column
+            title="启用"
+            align="center"
+            width={80}
+            render={(record: APISiteArticles.Data) => (
+              <Access
+                accessible={access.page('site.article.enable')}
+                fallback={<Enable is_enable={record.is_enable} />}
+              >
+                <Switch
+                  size="small"
+                  checked={record.is_enable === 1}
+                  onClick={() => onEnable(record)}
+                  loading={record.loading_enable}
+                />
+              </Access>
+            )}
           />
           <Table.Column
             title="操作"

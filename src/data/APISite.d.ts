@@ -28,6 +28,7 @@ declare namespace APISite {
     published_at?: string;
     is_top?: number;
     is_recommend?: number;
+    is_enable?: number;
     created_at?: string;
   };
 

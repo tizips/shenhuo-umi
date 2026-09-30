@@ -9,3 +9,10 @@ export async function doPaginate(params?: any) {
 export async function doDelete(id?: number) {
   return request<APIResponse.Response<any>>(`/api-admin/site/articles/${id}`, { method: 'DELETE' });
 }
+
+export async function doEnable(data: APIRequest.Enable<number>) {
+  return request<APIResponse.Response<any>>('/api-admin/site/article/enable', {
+    method: 'PUT',
+    data,
+  });
+}

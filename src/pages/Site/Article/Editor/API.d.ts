@@ -14,6 +14,7 @@ declare namespace APISiteArticle {
     published_at?: any;
     is_top?: number;
     is_recommend?: number;
+    is_enable?: number;
     content?: string;
   };
 
