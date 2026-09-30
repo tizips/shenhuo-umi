@@ -1,6 +1,6 @@
 import { request } from 'umi';
 
-export async function doPaginate(params?: any) {
+export async function doPaginate(params?: APISiteBanners.Search) {
   return request<APIResponse.Paginate<APISiteBanners.Data>>('/api-admin/site/banners', { params });
 }
 

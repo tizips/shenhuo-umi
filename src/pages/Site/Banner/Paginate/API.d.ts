@@ -5,6 +5,8 @@ declare namespace APISiteBanners {
     image?: string;
     link?: string;
     order?: number;
+    started_at?: string;
+    ended_at?: string;
     created_at?: string;
     loading_deleted?: boolean;
   };
@@ -15,5 +17,6 @@ declare namespace APISiteBanners {
 
   type Search = {
     page?: number;
+    size?: number;
   };
 }

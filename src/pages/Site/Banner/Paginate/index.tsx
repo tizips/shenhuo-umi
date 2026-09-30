@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Access, useAccess } from 'umi';
-import { Button, Card, Image, notification, Popconfirm, Space, Table } from 'antd';
+import { Button, Card, Image, notification, Popconfirm, Space, Table, Tag } from 'antd';
 import Editor from '@/pages/Site/Banner/Editor';
 import { doDelete, doPaginate } from './service';
 import Constants from '@/utils/Constants';
@@ -104,6 +104,36 @@ const Paginate: React.FC = () => {
           <Table.Column title="标题" dataIndex="title" />
           <Table.Column title="跳转链接" dataIndex="link" ellipsis render={(value) => value || '-'} />
           <Table.Column title="排序" dataIndex="order" align="center" width={80} />
+          <Table.Column
+            title="状态"
+            align="center"
+            width={100}
+            render={(record: APISiteBanners.Data) => {
+              if (!record.started_at || !record.ended_at) return '-';
+              const now = dayjs();
+              if (now.isBefore(dayjs(record.started_at))) {
+                return <Tag color="orange">未开始</Tag>;
+              }
+              if (now.isAfter(dayjs(record.ended_at))) {
+                return <Tag color="default">已过期</Tag>;
+              }
+              return <Tag color="green">生效中</Tag>;
+            }}
+          />
+          <Table.Column
+            title="生效时间"
+            align="center"
+            width={320}
+            render={(record: APISiteBanners.Data) =>
+              record.started_at && record.ended_at ? (
+                <span>
+                  {record.started_at} ~ {record.ended_at}
+                </span>
+              ) : (
+                '-'
+              )
+            }
+          />
           <Table.Column
             title="创建时间"
             align="center"

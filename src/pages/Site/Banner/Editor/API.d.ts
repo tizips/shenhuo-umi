@@ -13,6 +13,26 @@ declare namespace APISiteBanner {
     images?: any[];
     link?: string;
     order?: number;
+    range?: any[];
+  };
+
+  type Create = {
+    title?: string;
+    image?: string;
+    link?: string;
+    order?: number;
+    started_at?: string;
+    ended_at?: string;
+  };
+
+  type Update = {
+    id?: number;
+    title?: string;
+    image?: string;
+    link?: string;
+    order?: number;
+    started_at?: string;
+    ended_at?: string;
   };
 
   type Loading = {
