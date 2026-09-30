@@ -27,6 +27,7 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
     if (props.visible) {
       former.setFieldsValue({
         name: props.params?.name,
+        id_card: props.params?.id_card,
         unit: props.params?.unit,
         mobile: props.params?.mobile,
         number: props.params?.number,
@@ -53,15 +54,12 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
         <Form.Item label="姓名" name="name" rules={[{ required: true }, { max: 32 }]}>
           <Input />
         </Form.Item>
-        <Form.Item label="单位" name="unit" rules={[{ required: true }, { max: 64 }]}>
-          <Input />
-        </Form.Item>
         <Form.Item
-          label="手机号"
-          name="mobile"
+          label="身份证号"
+          name="id_card"
           rules={[
             { required: true },
-            { pattern: RegExp(Pattern.MOBILE), message: '手机号格式错误' },
+            { pattern: RegExp(Pattern.ID_CARD), message: '身份证号格式错误' },
           ]}
         >
           <Input />
@@ -69,8 +67,20 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
         <Form.Item label="参赛号" name="number" rules={[{ required: true }, { max: 32 }]}>
           <Input />
         </Form.Item>
+        <Form.Item label="单位" name="unit" rules={[{ required: true }, { max: 64 }]}>
+          <Input />
+        </Form.Item>
         <Form.Item label="小组名称" name="group_name" rules={[{ required: true }, { max: 64 }]}>
           <Input />
+        </Form.Item>
+        <Form.Item
+          label="手机号"
+          name="mobile"
+          rules={[
+            { pattern: RegExp(Pattern.MOBILE), message: '手机号格式错误' },
+          ]}
+        >
+          <Input placeholder="用于登录，可为空" />
         </Form.Item>
         <Form.Item
           label="密码"

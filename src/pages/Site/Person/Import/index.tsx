@@ -82,7 +82,7 @@ const Import: React.FC<APISitePersonOfImport.Props> = (props) => {
         message="导入说明"
         description={
           <ul style={{ margin: 0, paddingLeft: 18 }}>
-            <li>请使用模板中的表头：姓名、单位、手机号、参赛号、小组名称</li>
+            <li>请使用模板中的表头：姓名、单位、手机号、身份证号、参赛号、小组名称</li>
             <li>
               表头或格式不确定？
               <Button
@@ -96,7 +96,7 @@ const Import: React.FC<APISitePersonOfImport.Props> = (props) => {
               </Button>
             </li>
             <li>仅支持 .xls / .xlsx 格式文件</li>
-            <li>手机号已存在的数据将被跳过，不会重复导入</li>
+            <li>手机号、身份证号或参赛号已存在的数据将被跳过，不会重复导入</li>
           </ul>
         }
         style={{ marginTop: 16 }}

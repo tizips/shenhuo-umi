@@ -10,6 +10,6 @@ export async function doCreate(params?: any) {
 export async function doUpdate(id?: string, params?: any) {
   return request<APIResponse.Response<any>>(`/api-admin/site/persons/${id}`, {
     method: 'PUT',
-    data: params,
+    data: { id, ...params },
   });
 }

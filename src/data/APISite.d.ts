@@ -44,6 +44,7 @@ declare namespace APISite {
     name?: string;
     unit?: string;
     mobile?: string;
+    id_card?: string;
     number?: string;
     group_name?: string;
     must_change_password?: number;

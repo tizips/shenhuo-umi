@@ -10,6 +10,7 @@ declare namespace APISitePerson {
 
   type Former = {
     name?: string;
+    id_card?: string;
     unit?: string;
     mobile?: string;
     password?: string;
