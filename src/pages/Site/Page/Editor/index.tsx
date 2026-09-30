@@ -9,11 +9,13 @@ const requiredHtml = [
   {
     required: true,
     validator(_: unknown, value?: string) {
-      const text = (value || '')
+      const html = value || '';
+      const hasMedia = /<(img|video|audio|iframe)\b/i.test(html);
+      const text = html
         .replace(/<[^>]+>/g, '')
         .replace(/&nbsp;/g, ' ')
         .trim();
-      return text ? Promise.resolve() : Promise.reject(new Error('请输入内容'));
+      return hasMedia || text ? Promise.resolve() : Promise.reject(new Error('请输入内容'));
     },
   },
 ];
