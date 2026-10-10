@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Divider, Form, Input, Modal, notification } from 'antd';
+import { Divider, Form, Input, Modal, notification, Select } from 'antd';
+import { doSiteDrawCategoryOfOpening } from '@/services/site';
 import { doCreate, doUpdate } from './service';
 import Constants from '@/utils/Constants';
 import Pattern from '@/utils/Pattern';
@@ -7,9 +8,21 @@ import Pattern from '@/utils/Pattern';
 const Editor: React.FC<APISitePerson.Props> = (props) => {
   const [former] = Form.useForm<APISitePerson.Former>();
   const [loading, setLoading] = useState<APISitePerson.Loading>({});
+  const [categories, setCategories] = useState<APISite.Opening[]>([]);
+
+  const toCategories = () => {
+    setLoading((prev) => ({ ...prev, categories: true }));
+    doSiteDrawCategoryOfOpening()
+      .then((response) => {
+        if (response.code === Constants.Success) {
+          setCategories(response.data);
+        }
+      })
+      .finally(() => setLoading((prev) => ({ ...prev, categories: false })));
+  };
 
   const submit = (values: APISitePerson.Former, isUpdate: boolean) => {
-    setLoading({ confirmed: true });
+    setLoading((prev) => ({ ...prev, confirmed: true }));
     const req = isUpdate ? doUpdate(props.params?.id, values) : doCreate(values);
     req
       .then((response) => {
@@ -20,11 +33,12 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
           props.onSave?.();
         }
       })
-      .finally(() => setLoading({ confirmed: false }));
+      .finally(() => setLoading((prev) => ({ ...prev, confirmed: false })));
   };
 
   useEffect(() => {
     if (props.visible) {
+      toCategories();
       former.setFieldsValue({
         name: props.params?.name,
         id_card: props.params?.id_card,
@@ -32,6 +46,7 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
         mobile: props.params?.mobile,
         number: props.params?.number,
         group_name: props.params?.group_name,
+        category_id: props.params?.category_id,
         password: undefined,
       });
     }
@@ -71,7 +86,18 @@ const Editor: React.FC<APISitePerson.Props> = (props) => {
           <Input />
         </Form.Item>
         <Form.Item label="小组名称" name="group_name" rules={[{ required: true }, { max: 64 }]}>
-          <Input />
+          <Input placeholder="请输入所属小组名称" />
+        </Form.Item>
+        <Form.Item
+          label="抽签组别"
+          name="category_id"
+          rules={[{ required: true, message: '请选择抽签组别' }]}
+        >
+          <Select
+            placeholder="请选择抽签组别"
+            loading={loading.categories}
+            options={categories.map((item) => ({ label: item.name, value: item.id }))}
+          />
         </Form.Item>
         <Form.Item
           label="手机号"

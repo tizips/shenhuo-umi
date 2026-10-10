@@ -41,6 +41,8 @@ declare namespace APISite {
 
   type PersonInformation = {
     id?: string;
+    category_id?: number;
+    category?: string;
     name?: string;
     unit?: string;
     mobile?: string;
@@ -87,6 +89,7 @@ declare namespace APISite {
     number?: string;
     unit?: string;
     group_name?: string;
+    sequence?: number;
     created_at?: string;
   };
 

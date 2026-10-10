@@ -67,7 +67,7 @@ const Paginate: React.FC = () => {
           <Space size={[10, 10]}>
             <Input.Search
               allowClear
-              placeholder="姓名 / 参赛号 / 身份证号 / 手机号"
+              placeholder="姓名 / 参赛号 / 身份证号 / 手机号 / 小组 / 单位"
               onSearch={(keyword) => setSearch({ ...search, page: 1, keyword })}
             />
             <Button type="primary" onClick={toPaginate} loading={load}>
@@ -108,6 +108,7 @@ const Paginate: React.FC = () => {
           <Table.Column title="手机号" dataIndex="mobile" />
           <Table.Column title="单位" dataIndex="unit" />
           <Table.Column title="小组" dataIndex="group_name" />
+          <Table.Column title="抽签组别" dataIndex="category" />
           <Table.Column
             title="改密"
             align="center"

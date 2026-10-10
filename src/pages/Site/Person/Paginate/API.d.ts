@@ -1,6 +1,8 @@
 declare namespace APISitePersons {
   type Data = {
     id?: string;
+    category_id?: number;
+    category?: string;
     name?: string;
     unit?: string;
     mobile?: string;

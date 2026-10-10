@@ -82,7 +82,8 @@ const Import: React.FC<APISitePersonOfImport.Props> = (props) => {
         message="导入说明"
         description={
           <ul style={{ margin: 0, paddingLeft: 18 }}>
-            <li>请使用模板中的表头：姓名、单位、手机号、身份证号、参赛号、小组名称</li>
+            <li>请使用模板中的表头：姓名、单位、手机号、身份证号、参赛号、小组名称、抽签组别</li>
+            <li>「抽签组别」必填，按抽签类别名称匹配，无法匹配则整次导入失败；「小组名称」为人员所属小组</li>
             <li>
               表头或格式不确定？
               <Button
