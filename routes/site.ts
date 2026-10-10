@@ -37,7 +37,7 @@ export default [
     component: '@/pages/Site/DrawCategory/Paginate',
   },
   {
-    name: '抽签管理',
+    name: '抽签结果',
     icon: 'TrophyOutlined',
     path: '/site/draws',
     access: 'route',

@@ -1,5 +1,6 @@
 declare namespace APISiteDraws {
   type Data = {
+    sequence?: number;
     id?: number;
     category_id?: number;
     category?: string;
@@ -17,7 +18,6 @@ declare namespace APISiteDraws {
   };
 
   type Search = {
-    page?: number;
     category_id?: number;
   };
 }
