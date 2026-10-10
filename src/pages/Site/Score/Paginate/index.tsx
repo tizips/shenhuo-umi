@@ -68,7 +68,7 @@ const Paginate: React.FC = () => {
           <Space size={[10, 10]}>
             <Input.Search
               allowClear
-              placeholder="姓名 / 参赛号"
+              placeholder="姓名 / 参赛号 / 小组 / 类别"
               onSearch={(keyword) => setSearch({ ...search, page: 1, keyword })}
             />
             <Button type="primary" onClick={toPaginate} loading={load}>
